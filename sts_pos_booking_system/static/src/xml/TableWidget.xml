@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="TableWidget" t-inherit="pos_restaurant.TableWidget" t-inherit-mode="extension" owl="1">
+        <xpath expr="//span[hasclass('label')]" position="after">
+            <t t-if="IsShowTimer">
+                <div style="position: absolute;
+                    display: inline-block;
+                    bottom: 0;
+                    left: 0%;
+                    height: 20px;
+                    line-height: 20px;
+                    font-size: 12px;
+                    margin-bottom: 25px;
+                    color: black;
+                    z-index: 3;white-space: nowrap;
+                    width: 100%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;">
+                    <span class="timer"></span>
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+<odoo>
+    <data>
+
+    <template id="sale_order_portal_content_inherit" inherit_id="sale.sale_order_portal_content" name="Sales Order Portal Content">
+        <xpath expr="//div[@id='introduction']//h2" position="inside">
+            <span style="float:left">
+                <span>Booking ID:</span>
+                <em t-esc="sale_order.booking_id.name"/>
+            </span>
+        </xpath>
+    </template>
+
+
+      <record id="res_users_inherit" model="ir.ui.view">
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook//page[1]//group" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+            </field>
+    </record>
+              <!-- <template id="wk_payment_tokens_list_inherited" name="Payment Tokens list" inherit_id='website_booking_system.wk_payment_tokens_list'>
+                  <xpath expr='//a[@id="o_payment_form_pay_later"]' position='replace'>
+
+                      <t t-set="paylaterTimeLimit" t-value="request.env['booking.config'].sudo().search([('active_record','=',True),('company_id','=',request.env.user.company_id.id)]).time or 48"/>
+                      <div t-if='paylaterTimeLimit' class="modal fade" id="wkBookingModalCenterx" tabindex="-1" role="dialog" aria-labelledby="wkBookingModalCenterTitle" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                              <div class="modal-content">
+                              <div class="modal-header">
+                                  <h5 class="modal-title" id="wkBookingModalLongTitle">Booking Pay Later</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span>&amp;times;</span>
+                                  </button>
+                              </div>
+                              <div class="modal-body">
+                                  Please Pay for the Booking within <t t-esc='paylaterTimeLimit'/> hours.
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                  <a href='/sale_order/booking/later' id="o_payment_form_pay_later" class="btn btn-primary">Proceed</a>
+                              </div>
+                              </div>
+                          </div>
+                      </div>
+
+                      <t t-if='paylaterTimeLimit'>
+                          <a href='#' t-if='back_button_txt and website_sale_order.is_booking_type'  data-toggle="modal" data-target="#wkBookingModalCenterx" class="btn btn-primary">
+                              <i t-if="icon_class and not icon_right" t-attf-class="fa {{icon_class}}"/>
+                                  Pay Later
+                              <i t-if="icon_class and icon_right" t-attf-class="fa {{icon_class}}"/>
+                          </a>
+                      </t>
+
+
+                  </xpath>
+              </template> -->
+
+
+
+        <record id="inherit_product_template_pos_booking_form_view" model="ir.ui.view">
+            <field name="name">product.template.booking.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="website_booking_system.inherit_product_template_booking_form_view"/>
+            <field name="arch" type="xml">
+               <xpath expr="//page[@name='booking_and_reservation']" position="inside">
+                    <!-- <field name="exclusive_for_member"/> -->
+                    <group>
+                        <field name="min_booking_time"/>
+                        <field name="closing_days" widget="many2many_tags"/>
+                        <field name="flexible_time_extension"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+
+        <!-- <record id="view_pos_res_config_settings_inherit" model="ir.ui.view" >
+            <field name="name">res.config.settings.view.form.inherit</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//h2[text()='Payments']/following-sibling::div" position="after">
+                    <h2>Others</h2>
+                    <div class="row mt16 o_settings_container" id="o_settings_others">
+                        <div class="col-12 col-lg-6 o_setting_box" title="Check here to prevent the pos session from getting start in incognito mode.">
+                            <div class="o_setting_left_pane">
+                                <field name="reminder_timing"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="reminder_timing" />
+                                <div class="text-muted">
+                                    Add the time on which you want the notification before completion of a booking.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record> -->
+
+                <!-- <record id="product_template_Form_view_inherited" model="ir.ui.view">
+                    <field name="name">Product Template Form</field>
+                    <field name="model">product.template</field>
+                    <field name="inherit_id" ref="product.product_template_form_view"/>
+                    <field name="arch" type="xml">
+                        <xpath expr="//field[@name='categ_id']" position="replace">
+                            <field name="is_superuser" invisible="1"/>
+                            <field name="categ_id" attrs="{'invisible':[('is_superuser','=',True)]}"/>
+                            <field name="categ_id" options="{'no_create_edit':True}"  attrs="{'invisible':[('is_superuser','=',False)]}"/>
+                        </xpath>
+                    </field>
+                </record> -->
+
+
+
+                		<record id="base.action_res_company_form" model="ir.actions.act_window">
+                            <field name="domain">[('name','=','my_company')]</field>
+                        </record>
+
+
+              		<record id="base.action_res_users" model="ir.actions.act_window">
+                          <field name="domain">[('name','=','my_users')]</field>
+                      </record>
+
+                <record id="wk_booking_order_Form_view" model="ir.ui.view">
+                    <field name="name">Booking Order Form</field>
+                    <field name="model">booking.order</field>
+                    <field name="arch" type="xml">
+                        <form string="Booking Order Form">
+                            <header>
+                              <button name="click_cancel" string="Cancel" type="object" attrs="{'invisible': [('state', 'in', ['done','paid','cancel','in_progress'])]}"></button>
+                              <field name="state" widget="statusbar"  statusbar_visible="draft,paid,in_progress,done"/>
+                            </header>
+                            <sheet>
+                                <group>
+                                    <group col="4" colspan="4">
+                                        <field name="name"/>
+                                        <field name="booking_product_id"/>
+                                        <field name="quantity"/>
+                                        <!-- <field name="time_slot_id"/> -->
+                                        <field name="plan_id"/>
+                                        <field name="customer"/>
+                                        <field name="booking_date"/>
+                                        <!-- <field name="booking_slot_ids"/>
+                                        <field name="time_slot_ids"/> -->
+                                        <!-- <field name="checkin"/> -->
+                                        <!-- <field name="checkout"/> -->
+                                    </group>
+                                </group>
+                                <notebook colspan="4">
+                                    <page name="Extra Products" string="Extra Products">
+                                        <field name="extra_lines_ids">
+                                            <tree>
+                                                <field name="product_id"/>
+                                                <field name="qty"/>
+                                                <field name="price_unit"/>
+                                            </tree>
+                                        </field>
+                                    </page>
+                                    <page name="Booking Slots" string="Booking Slots">
+                                      <field name="booking_slot_ids" colspan="4" nolabel="1">
+                                        <tree>
+                                            <field name="time_slot_id"/>
+                                            <field name="plan_id"/>
+                                        </tree>
+                                        <form>
+                                            <group col="4" colspan="4">
+                                                <field name="time_slot_id"/>
+                                                <field name="plan_id"/>
+                                            </group>
+                                        </form>
+                                      </field>
+                                    </page>
+                                    <page name="Extra Info" string="Extra Info">
+                                      <field name="pos_order_id" attrs="{'invisible':[('pos_order_id','=',False)]}"/>
+                                      <field name="sale_order_id" attrs="{'invisible':[('sale_order_id','=',False)]}"/>
+                                    </page>
+                                </notebook>
+                            </sheet>
+                        </form>
+                    </field>
+                </record>
+
+
+        <record id="paylater_Form_view" model="ir.ui.view">
+            <field name="name">Booking Config Form</field>
+            <field name="model">booking.config</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+						<h1 style="text-align:center;" name="configuration">Booking Configurations</h1>
+						<div class="row mt16 o_settings_container" id="screen_config_name">
+							<div class="oe_title" style="margin-left:5%;" id="title">
+								<label for="name" class="oe_edit_only"/>
+								<h1><field name="name" required="1"/></h1>
+							</div>
+						</div>
+						<div class="row mt16 o_settings_container" id="general_conf">
+							<!-- <group col="2" colspan="2">
+								<div class="col-12 col-lg-6 o_setting_box" >
+									<div class="o_setting_left_pane">
+									</div>
+									<div class="o_setting_right_pane">
+										<label for="url"/>
+										<div class="text-muted">
+											Paylater Time Limit
+                                        </div>
+										<field name="time"/>
+									</div>
+								</div>
+								<div class="col-12 col-lg-6 o_setting_box" >
+									<div class="o_setting_left_pane">
+									</div>
+									<div class="o_setting_right_pane">
+										<label for="active_record"/>
+										<div class="text-muted">
+											Active Record
+                                        </div>
+										<field name="active_record"/>
+									</div>
+								</div>
+							</group> -->
+							<group col="2" colspan="2">
+								<div class="row mt16 o_settings_container" style="margin-left:0;">
+									<div class="col-12 col-lg-6 o_setting_box" id="pos_config_ids">
+										<div class="o_setting_left_pane">
+										</div>
+										<div class="o_setting_right_pane">
+											<span class="o_form_label">Paylater Time Limit</span>
+											<div class="text-muted">
+											Set Paylater Time Limit
+											</div>
+											<div class="content-group mt16">
+												<field name="time"/>
+											</div>
+										</div>
+									</div>
+									<div class="col-12 col-lg-6 o_setting_box" id="pos_config_ids">
+										<div class="o_setting_left_pane">
+										</div>
+										<div class="o_setting_right_pane">
+											<span class="o_form_label">Active Record</span>
+											<div class="text-muted">
+												Active This Record
+											</div>
+											<div class="content-group mt16">
+												<field name="active_record"/>
+											</div>
+										</div>
+									</div>
+									<div class="col-12 col-lg-6 o_setting_box" id="pos_config_ids">
+										<div class="o_setting_left_pane">
+										</div>
+										<div class="o_setting_right_pane">
+											<span class="o_form_label">Reminder Timing(In Minutes)</span>
+											<div class="text-muted">
+												Add The Time for Reminder Notificaton
+											</div>
+											<div class="content-group mt16">
+												<field name="reminder_timing"/>
+											</div>
+										</div>
+									</div>
+									<div class="col-12 col-lg-6 o_setting_box" id="pos_category_ids">
+										<div class="o_setting_left_pane">
+										</div>
+										<div class="o_setting_right_pane">
+											<span class="o_form_label">Range Date Time For Reschedule</span>
+											<div class="text-muted">
+												Add Range Date Time For Reschedule
+											</div>
+											<div class="content-group mt16">
+												<field name="time_to_reschedule"/>
+												<field name="type_of_reschedule_time" style="width:70px; margin-left: 4px; font-size: 16px;" required="1"/>
+											</div>
+										</div>
+									</div>
+									<div class="col-12 col-lg-6 o_setting_box" id="pos_category_ids">
+										<div class="o_setting_left_pane">
+										</div>
+										<div class="o_setting_right_pane">
+											<span class="o_form_label">Set Maximum Amount to Reschedule</span>
+											<div class="text-muted">
+												Set Maximum Amount to Reschedule
+											</div>
+											<div class="content-group mt16">
+												<field name="reschedule_limit"/>
+											</div>
+										</div>
+									</div>
+									<div class="col-12 col-lg-6 o_setting_box" id="pos_category_ids">
+										<div class="o_setting_left_pane">
+										</div>
+										<div class="o_setting_right_pane">
+											<span class="o_form_label">Change Booking Range to be Available</span>
+											<div class="text-muted">
+												Add A Booking Range
+											</div>
+											<div class="content-group mt16">
+												<field name="booking_range"/>
+												<field name="type_of_booking_range" required="1" style="width:70px; margin-left: 4px; font-size: 16px;"/>
+											</div>
+										</div>
+									</div>
+									<div class="col-12 col-lg-6 o_setting_box" id="pos_category_ids">
+										<div class="o_setting_left_pane">
+                      <field name="is_send_mail"/>
+										</div>
+										<div class="o_setting_right_pane">
+											<span class="o_form_label">Send Mail</span>
+											<div class="text-muted">
+												Send Mail On Creation Of Booking
+											</div>
+										</div>
+									</div>
+									<div class="col-12 col-lg-6 o_setting_box" id="orders_on_grid">
+										<div class="o_setting_left_pane">
+										</div>
+										<div class="o_setting_right_pane">
+											<span class="o_form_label">Closing Days</span>
+											<div class="text-muted">
+												Add Closing Days
+											</div>
+											<div class="content-group mt16">
+												<field name="closing_days" widget="many2many_tags"/>
+											</div>
+										</div>
+									</div>
+								</div>
+							</group>
+						</div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="wk_booking_order_Tree_view" model="ir.ui.view">
+            <field name="name">Booking Order Tree</field>
+            <field name="model">booking.order</field>
+            <field name="arch" type="xml">
+                <tree string="Booking Order Tree">
+                    <field name="name"/>
+                    <field name="time_slot_id"/>
+                    <field name="booking_product_id"/>
+                    <field name="quantity"/>
+                    <field name="state" widget="statusbar"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="paylater_tree" model="ir.ui.view">
+            <field name="name">Paylater Tree</field>
+            <field name="model">booking.config</field>
+            <field name="arch" type="xml">
+                <tree string="paylater">
+                    <field name="name"/>
+                    <field name="time"/>
+                    <field name="active_record"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- <record id="wk_booking_plan_Form_view_inherited" model="ir.ui.view">
+            <field name="name">Booking Plan Form</field>
+            <field name="model">booking.plan</field>
+            <field name="inherit_id" ref="website_booking_system.wk_booking_plan_Form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='discription']" position="after">
+                    <field name="closing_days" widget="many2many_tags"/>
+                </xpath>
+            </field>
+        </record> -->
+
+
+
+        <record id="wk_inherit_product_template_booking_form_view" model="ir.ui.view">
+            <field name="name">Product Template Form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="website_booking_system.inherit_product_template_booking_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='booking_day_slot_ids']" position="before">
+                    <!-- <field name="closing_days" widget="many2many_tags"/> -->
+                        <button name="generate_dayslots" string="Generate Day Slots" type="object"/>
+                        <separator/>
+                </xpath>
+                <!-- <xpath expr="//field[@name='booking_day_slot_ids']" position="attributes">
+                    <attribute name="domain">[('company_id','=',self.env.user.company_id)]</attribute>
+                </xpath> -->
+            </field>
+        </record>
+
+
+        <!-- **************Booking Time Slots Records************** -->
+
+
+        <!-- <record id="wk_booking_time_slot_Form_view" model="ir.ui.view">
+            <field name="name">Booking Time Slot Form</field>
+            <field name="model">booking.time.slot</field>
+            <field name="arch" type="xml">
+                <form string="Booking Time Slot">
+                    <header>
+                        <button name="generate_timeslots" string="Generate TimeSlots" type="object"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="sequence" widget="handle"/>
+                                <field name="start_time" widget="float_time"/>
+                                <field name="end_time" widget="float_time"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record> -->
+
+        <!-- <act_window
+                id="auto_generate_slots"
+                name="Generate TimeSlots"
+                src_model="booking.time.slot"
+                res_model="auto.time.slot.wizard"
+                view_type="form" view_mode="form"
+                key2="client_action_multi" target="new"
+                /> -->
+
+
+		<record id="auto_generate_slots" model="ir.actions.act_window">
+            <field name="name">Generate Time Slots Action</field>
+            <field name="res_model">auto.time.slot.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+
+		<menuitem action="auto_generate_slots" name="Generate Timeslots" parent="website_booking_system.booking_config_main_menu"
+            id="menu_generate_timeslots" sequence="3" groups="point_of_sale.group_pos_manager"/>
+
+
+
+        <!-- <record id="res_company_form_view_inherited" model="ir.ui.view">
+            <field name="name">Res Company Form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='social_media']" position="after">
+                <group string="Extra Config" name="extra_config">
+                        <field name="description"/>
+                        <div  class="oe_inline">
+                            <label style="font-weight:bold;" for="" string="Operational Hours "/>
+                            <field name="operational_hours_start_time" widget="float_time" nolabel="1"/>
+                            <label for="" string="-" style="padding:0 5px;"/>
+                            <field name="operational_hours_end_time" widget="float_time" nolabel="1"  />
+                        </div>
+                        <field name="facility_ids" widget="many2many_tags"/>
+                    </group>
+                </xpath>
+            </field>
+        </record> -->
+
+
+        <!-- <record id="product_kanban_view_inherited" model="ir.ui.view">
+            <field name="name">Product Template Kanban</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_kanban_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//ul" position="replace">
+                    <ul>
+                        <li>
+                        <strong>Price:
+                    <field name="is_booking_type" invisible="1"/>
+                            <field name="lst_price" attrs="{'invisible':[('is_booking_type','=',True)]}"></field>
+                            <field name="range_price"  attrs="{'invisible':[('is_booking_type','=',False)]}"></field>
+                            </strong>
+                        </li>
+                    </ul>
+                </xpath>
+            </field>
+        </record> -->
+
+                <record id="res_usrs_inherit" model="ir.ui.view">
+                    <field name="name">Res Users Inherit</field>
+                    <field name="model">res.users</field>
+                    <field name="inherit_id" ref="base.user_groups_view"/>
+                    <field name="arch" type="xml">
+                        <xpath expr="//group[2]" position="attributes">
+                          <attribute name="groups">base.group_system</attribute>
+                        </xpath>
+                    </field>
+                </record>
+
+        <!-- <record id="base.action_res_users" model="ir.actions.server">
+                  <field name="name">Users</field>
+                  <field name="model_id" ref="model_res_users"/>
+                  <field name="state">code</field>
+                  <field name="code">action = env.get('res.users').fitler_users()</field>
+       </record>
+
+       <menuitem action="base.action_res_users" id="base.menu_action_res_users" parent="base.menu_users" sequence="0"/> -->
+
+
+      <!-- <record id="action_res_users" model="ir.actions.act_window">
+            <field name="name">Users</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.users</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="view_users_tree"/>
+            <field name="search_view_id" ref="view_users_search"/>
+            <field name="context">{'search_default_no_share': 1}</field>
+            <field name="help">Create and manage users that will connect to the system. Users can be deactivated should there be a period of time during which they will/should not connect to the system. You can assign them groups in order to give them specific access to the applications they need to use in the system.</field>
+        </record> -->
+
+        <record id="paylater_time_limit_action" model="ir.actions.act_window">
+            <field name="name">Paylater Time Limit</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">booking.config</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+            id="pay_later_menu"
+            name="Booking Rules Configuration"
+            action="paylater_time_limit_action"
+            parent="website_booking_system.booking_config_main_menu"
+            sequence="3"
+        />
+
+
+        <record id="wk_booking_order_action" model="ir.actions.act_window">
+            <field name="name">Booking Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">booking.order</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+            id="booking_order_menuItem"
+            name="Booking Order"
+            action="wk_booking_order_action"
+            parent="point_of_sale.menu_point_root"
+            sequence="2"
+        />
+
+    </data>
+</odoo>

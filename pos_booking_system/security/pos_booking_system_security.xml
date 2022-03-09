@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+<odoo>
+    <record id="group_pos_booking_system_super_user" model="res.groups">
+        <field name="name">SuperUser</field>
+          <field name="category_id" ref="base.module_category_usability"/>
+    </record>
+
+
+
+      <!-- <record id="rule_pos_multi_company" model="ir.rule">
+          <field name="name">Point Of Sale Order</field>
+          <field name="model_id" ref="model_pos_order" />
+          <field name="global" eval="True" />
+          <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
+      </record> -->
+
+    <record id="rule_booking_order_multi_company" model="ir.rule">
+        <field name="name">Booking Order</field>
+        <field name="model_id" ref="model_booking_order" />
+        <field name="global" eval="True" />
+        <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
+    </record>
+
+
+    <!-- <record id="res_users_superuser" model="ir.rule">
+        <field name="name">Res Users SuperUser</field>
+        <field name="model_id" ref="model_res_users"/>
+        <field name="domain_force">[('self.has_group("pos_booking_system.group_pos_booking_system_super_user")', '=',True)]</field>
+    </record> -->
+
+
+    <record id="time_slot_rule" model="ir.rule">
+        <field name="name">Time SLot rule</field>
+        <field name="model_id" ref="model_booking_time_slot"/>
+        <field name="global" eval="True" />
+        <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
+    </record>
+
+
+
+    <!-- <record id="rule_res_company_multi_company" model="ir.rule">
+        <field name="name">Multi Company</field>
+        <field name="model_id" ref="model_res_company" />
+        <field name="global" eval="True" />
+        <field name="domain_force">[('id', '=', user.company_id.id)]</field>
+    </record> -->
+
+
+
+    <record id="rule_res_users_multi_company" model="ir.rule">
+        <field name="name">Res Users</field>
+        <field name="model_id" ref="model_res_users" />
+        <field name="global" eval="True" />
+        <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
+    </record>
+
+
+    <record id="rule_booking_config_multi_company" model="ir.rule">
+        <field name="name">Booking Config</field>
+        <field name="model_id" ref="model_booking_config" />
+        <field name="global" eval="True" />
+        <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
+    </record>
+
+    <record id="rule_day_slot_config_multi_company" model="ir.rule">
+        <field name="name">Day Slot Config</field>
+        <field name="model_id" ref="model_day_slot_config" />
+        <field name="global" eval="True" />
+        <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
+    </record>
+
+
+    <record id="rule_booking_slot_multi_company" model="ir.rule">
+        <field name="name">Booking Slot</field>
+        <field name="model_id" ref="model_booking_slot" />
+        <field name="global" eval="True" />
+        <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
+    </record>
+
+    <record id="rule_booking_plan_multi_company" model="ir.rule">
+        <field name="name">Booking Plan</field>
+        <field name="model_id" ref="model_booking_plan" />
+        <field name="global" eval="True" />
+        <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
+    </record>
+
+</odoo>

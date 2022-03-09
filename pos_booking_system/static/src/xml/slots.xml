@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="BookingSlotsScreenWidget" owl="1">
+    
+        <div class="clientlist-screen screen slots">
+            <div class="orders-screen-content">
+                <section class="top-content">
+                    <span class='button back' style="border:none;color:white;background:black;">
+                        <i class='fa fa-angle-double-left'></i>
+                        Back    
+                    </span>
+                <span class="searchbox">
+                    <p style="font-weight: bold;font-size: 24px;bottom: 11px;position: relative;text-align: center;">Booked Slots</p>
+                </span>
+                </section>
+                <section class="full-content">
+                    <div class='window'>
+                        <section class='subwindow'>
+                            <div class='subwindow-container'>
+                                <div class='subwindow-container-fix slots-details-contents'>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="InnerSlotData">
+        <div style="width:100%;padding:0 5%;">
+            <div style="display:flex;justify-content:space-evenly;flex-wrap:wrap;width:90%;">
+                <!-- <t t-foreach="booking_data" t-as="booking">
+                    <div style="background:pink;flex:1;max-width: 128px;border-radius: 71px;height: 128px;" t-att-data-id="booking.id" t-att-data-slot-id="booking.time_slot_id[0]">
+                        <div style="margin-top: 43%;font-size: 18px;"><t t-esc="booking.time_slot_id[1]"/></div>
+                    </div>
+                </t> -->
+    
+        <div class="row col-12 slot-container" style="display:flex;width:100%;margin-top:2%;flex-wrap: wrap;">
+            <t t-foreach="booking_data" t-as="booking">
+                <div  class="plan_available slot-use col-md-4 col-12" style="padding: 5px 11px;flex:0 0 200px;" t-att-product-id="booking.booking_product_id[0]" t-att-order-name="booking.order_name"  t-att-data-id="booking.id" t-att-booking-date="booking.booking_date" t-att-data-slot-id="booking.time_slot_id[0]">
+                    <label style="display: block;margin-bottom: 0;">
+                        <div class="bk_plan_div" style="padding-top: 0;">
+                            <div class="d-none d-sm-block">
+                                <div style="font-size: 20px;">
+                                <div class="slot-outer"><span class="slot-inner"><t t-esc="booking.name"/></span></div><br/>
+                                <div style="margin-top:3px">
+                                    <t t-esc="booking.customer[1]"/><br/>
+                                        <t t-esc="booking.time_slot_id[1]"/><br/><br/>
+                                    <t t-esc="booking.plan_id[1]"/>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </t>
+        </div>
+            </div>
+        </div>
+    </t>
+
+
+</templates>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>;) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+<odoo>
+    <data>
+
+        <record id="view_auto_time_slot_wizard" model="ir.ui.view">
+              <field name="name">Auto Time Slot</field>
+              <field name="model">auto.time.slot.wizard</field>
+              <field name="arch" type="xml">
+                  <form string="Auto Time Slot">
+                      <p class="oe_grey">
+                          Time Slots will be generated according to the intial time, end time and time gap.
+                      </p>
+                      <group>
+                        <field name="start_time" string="Open Time" required="1"/>
+                        <field name="end_time" string="Close Time" required="1"/>
+                        <field name="time_duration" string="Time Interval" required="1"/>
+                      </group>
+                      <footer>
+                          <button name="create_timeslots" string="Create TimeSlots" type="object"/>
+                          <button string="Cancel" class="btn-secondary" special="cancel"/>
+                      </footer>
+                  </form>
+              </field>
+          </record>
+
+
+        <record id="view_auto_day_slot_wizard" model="ir.ui.view">
+              <field name="name">Auto Day Slot</field>
+              <field name="model">auto.day.slot.wizard</field>
+              <field name="arch" type="xml">
+                  <form string="Auto Day Slot">
+                      <p class="oe_grey">
+                          Day Slots will be generated according to the input days, time slot, booking plan and price.
+                      </p>
+                      <group>
+                        <field name="input_days" widget="many2many_tags" required="1"/>
+                        <field name="time_slot" widget="many2many_tags" required="1" domain="[('company_id', '=', context.get('company_id',False))]"/>
+                        <field name="booking_plan" widget="many2many_tags" required="1"/>
+                        <field name="price" required="1" widget="char"/>
+                        <!-- <field name="is_exclusive"/> -->
+                      </group>
+                      <footer>
+                          <button name="create_dayslots" string="Create Day Slots" type="object"/>
+                          <button string="Cancel" class="btn-secondary" special="cancel"/>
+                      </footer>
+                  </form>
+              </field>
+          </record>
+
+
+    </data>
+</odoo>

@@ -1,0 +1,868 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+<templates id="template" xml:space="preserve">
+    <t t-name="WkAlertPopUp" owl="1">
+        <div class="modal-dialog">
+            <div class="popup popup-alert">
+                <p class="title" style="font-size:30px;">
+                    <t t-esc=" props.title || 'Booking Notification' "/>
+                </p>
+                <div class="body text-center" style="height:230px;max-height:230px;overflow-y:auto;">
+                    <t t-if="props.data">
+                        <t t-foreach="props.data" t-as="iter">
+                            <p>* The Booking
+                                <t t-esc="iter.name"/> will be get finished in
+                                <t t-esc="props.reminder_time"/> minutes.
+                            </p>
+                            <br/>
+                        </t>
+                    </t>
+                </div>
+                <div class="footer">
+                    <div class="button cancel" t-on-click="cancel">
+            Ok
+          </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="PlanOccupied" owl="1">
+        <div class="modal-dialog">
+            <div class="popup popup-alert">
+                <p class="title" style="font-size:30px;">
+                    <t t-esc=" props.title || 'Warning!!' "/>
+                </p>
+                <div class="body text-center" style="height:230px;max-height:230px;overflow-y:auto;">
+                    <t t-esc="props.body"/>
+                </div>
+                <div class="footer">
+                    <div class="button cancel" t-on-click="cancel">
+            Ok
+          </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="WkBookReservationPopUp" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-alert" style="max-width:80%;">
+                <p class="title">
+                    <button class="date_hide change_date" style="display:none;float:left">
+                        <i class=" fa fa-arrow-left" style="margin-right:2px;"/>Change Date
+                    </button>Make A Booking
+                </p>
+                <div class="body" style="height:330px;white-space:normal">
+                    <div style="width:100%;display:inline-block">
+                        <div class="book_booking_form check-form" style="width:70%;float:left;padding-right:2px;border-right:5px solid black;">
+                            <div class="datepicker_div" style="display:inline-block;width:85%;">
+                                <div id='bk_datepicker'  data-target-input="nearest" t-att-data-closing-day="props.closing_days" t-att-data-bk_end_date="props.end_date" t-att-data-bk_default_date="props.default_date" t-att-data-w_c_days="props.w_c_days" style="display:flex;">
+                                    <div style="display:block;">
+                                        <p style="font-size:18px;font-weight:bold;top: 8px;position: relative;font-size: 20px;color: #1CBC8C;">Booking Date:</p>
+                                    </div>
+                                    <div style="display:block;margin-left:20%;width:fit-content;margin-top:16px;">
+                                        <input type="text" t-on-click="click_input_date" class="booking_dates" id="datepicker" placeholder="MM/DD/YYYY"/>
+                                        <script>
+                                    $(function() {
+                                        $("#datepicker").datepicker({
+                                            minDate : new Date($('#bk_datepicker').data('bk_default_date')),
+                                            maxDate : new Date($('#bk_datepicker').data('bk_end_date')),
+                                            beforeShowDay: function(date){
+                                                var closing_days = $('#bk_datepicker').data('closing-day');
+                                                var month = date.getMonth();
+                                                month = parseInt(month) + 1 ;
+                                                var string_to_add = '-';
+                                                if(month.toString().length == 1)
+                                                  string_to_add+= 0;
+                                                var new_date = date.getFullYear()+string_to_add+ month+'-';
+                                                if(date.getDate() &lt; 10)
+                                                    new_date += '0'+date.getDate();
+                                                else
+                                                    new_date += date.getDate();
+                                                if($('#bk_datepicker').data('w_c_days').indexOf(date.getDay()) != -1 ){
+                                                    return [false, ''];
+                                                }
+                                                if( closing_days.includes(new_date)){
+                                                    return [false, ''];
+                                                }
+                                                return [true, ''];
+                                            }
+                                        });
+                                    });
+                                    </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="width:28%;display:block;float:right;height:100%;">
+                            <div style="font-size:20px;font-weight:bold;display:block;float:left;width:100%;margin-top:10px;">
+                                <div style="color:#1CBC8C;font-size:32px;">Booking Summary:</div>
+                            </div>
+                            <br/>
+                            <div style="float:left;width:100%;" class="booking_summary"/>
+                    </div>
+                    </div>
+                    <div class="wk-error-text"></div>
+                </div>
+                <div class="footer">
+                    <div class="button book" style="display:none;" t-on-click="book_reservation">
+                        Book Now
+                    </div>
+                    <div class="button proceed-date" t-on-click="proceed_date">
+                        Proceed
+                    </div>
+                    <div class="button cancel" t-on-click="cancel">
+                        Cancel
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="BookingSummary">
+        <div class="summary" style="font-weight:bold;font-size:24px;overflow-y: auto;padding-right: 22px;width:100%;">
+            <t t-foreach="data" t-as="slot">
+                <t t-set="timeslot" t-value="data[slot]"/>
+                <div style="display:inline-block;float:left;font-size:17px;width:100%;margin-top:10px;">
+                    <div style="display:block;width:100%;color:black;font-size:22px;">
+                        <t t-esc="timeslot.slot_name"/> :
+                    </div>
+                    <!-- &#160; -->
+                    <div style="display:block;width:100%;color:#875A7B;margin-top:3px;">
+                        <t t-set="count" t-value="0"/>
+                        <t t-foreach="timeslot.plans" t-as="plan">
+                            <t t-set="count" t-value="count + 1"/>
+                            <t t-set="slot_plan" t-value="timeslot.plans[plan]"/>
+                            <t t-esc="slot_plan.plan_name"/>
+                            <t t-if="count != Object.keys(timeslot.plans).length">
+                            ,
+                        </t>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+    <t t-name="RescheduleBookingPopUp" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-alert" style="width:600px;height:400px;">
+                <p class="title">Reschedule Booking</p>
+                <div class="body">
+                    <div class="book_booking_form">
+                        <div class="datepicker_div" style="display:inline-block;width:85%;">
+                            <div id='bk_datepickere'  data-target-input="nearest" t-att-data-bk_end_date="props.end_date" t-att-data-bk_default_date="props.default_date" t-att-data-closing-day="props.closing_days" t-att-data-w_c_days="props.w_c_days" style="display:flex;">
+                                <div style="display:block;">
+                                    <p style="font-size:18px;font-weight:bold;top: 8px;position: relative;font-size: 20px;color: #1CBC8C;">Booking Date:</p>
+                                </div>
+                                <div style="display:block;margin-left:20%;width:fit-content;margin-top:16px;">
+                                    <input type="text" class="booking_date" id="datepickere" readonly="1" placeholder="MM/DD/YYYY"/>
+                                    <script>
+                                    $(function() {
+                                        $("#datepickere").datepicker({
+                                            minDate : new Date($('#bk_datepickere').data('bk_default_date')),
+                                            maxDate : new Date($('#bk_datepickere').data('bk_end_date')),
+                                            beforeShowDay: function(date){
+                                                var closing_days = $('#bk_datepickere').data('closing-day');
+                                                var month = date.getMonth();
+                                                month = parseInt(month) + 1 ;
+                                                var string_to_add = '-';
+                                                if(month.toString().length == 1)
+                                                  string_to_add+= 0;
+                                                var new_date = date.getFullYear()+string_to_add+ month+'-';
+                                                if(date.getDate() &lt; 10)
+                                                    new_date += '0'+date.getDate();
+                                                else
+                                                    new_date += date.getDate();
+                                                if($('#bk_datepickere').data('w_c_days').indexOf(date.getDay()) != -1 ){
+                                                    return [false, ''];
+                                                }
+                                                if( closing_days.includes(new_date)){
+                                                    return [false, ''];
+                                                }
+                                                return [true, ''];
+                                            }
+                                        });
+                                    });
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wk-error-text"></div>
+                </div>
+                <div class="footer">
+                    <div class="button proceed" t-on-click="click_proceed">
+                        Proceed
+                    </div>
+                    <div class="button cancel" t-on-click="cancel">
+                        Cancel
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="BookingTimeSlot">
+        <div class="found_appointes">
+            <div style="display:inline-block;width:100%;">
+                <div style="display:inline-block;width:100%;">
+                    <div class="filter-container" style="float:left;display:block;">
+                        <div style="display: inline-block;width: 200px;">
+                            <div style="float:left;">
+                                Slot Filter:
+                            </div>
+                            <div>
+                                <select class="filter-start">
+                                    <t t-foreach="start_time_list" t-as="time">
+                                        <option t-att-value="time">
+                                            <t t-esc="time"/>
+                                        </option>
+                                    </t>
+                                </select> -
+                                <select class="filter-end">
+                                    <t t-foreach="end_time_list" t-as="time">
+                                        <option t-att-value="time">
+                                            <t t-esc="time"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="filter-now" t-on-click="filter_now">Filter</button>
+                    </div>
+                    <div class="filter-container" style="float:right;display:block;">
+                        <div class="date_add">
+                            <t t-esc="input_date"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row bk_border bk_modal_slots" style="margin-top:1%">
+                    <t t-foreach="day_slots" t-as="d_slot">
+                        <div class="timeslot" style="height:24px;" t-att-data-time_slot_id="d_slot['slot']['id']" t-att-data-start_time="d_slot['slot']['start_time']" t-att-data-end_time="d_slot['slot']['end_time']" t-att-data-slot_plans="d_slot['plans']">
+                            <t t-esc="d_slot['slot']['name']"/>
+                        </div>
+                    </t>
+                    <div t-if="!day_slots" class="col-12 text-center no_day_slots">
+                        <span>No slots availble on the selected date, please choose a different date.</span>
+                    </div>
+                </div>
+                <div class="row bk_model_plans" style="margin: 0 15px;">
+                    <t t-set="d_plans" t-value="day_slots[0]['plans']"/>
+                    <div class="col-12" style="padding: 1% 0 2% 0;">
+                        <span class="pull-left" style="font-size: 16px;font-weight: bold;">
+                            Select Plan:
+                            <span class="selected_slot">
+                                <t t-esc="day_slots[0]['slot']['name']"/>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="row col-12 bk_plans_m_div" style="display:flex;width:100%;flex-wrap: wrap;">
+                        <t t-foreach="d_plans" t-as="d_plan">
+                            <t t-if="widget.pos.get_order().get_client()">
+                                <t t-set="bk_av_qty" t-value="d_plan.avl_qty"/>
+                                <div t-att-class='"plan_available col-md-4 col-12 " + (!(bk_av_qty > 0) ? "bk_disable" : "")' style="padding: 5px 11px;flex:1" t-att-slot="d_plan['slot']" t-att-id="d_plan['id']">
+                                    <div class="max_qty_available" style="display:none;">
+                                        <t t-esc="bk_av_qty"/>
+                                    </div>
+                                    <label style="display: block;margin-bottom: 0;">
+                                        <input type="radio" name="bk_plan" required="true" t-att-id="d_plan['id']" t-att-value="d_plan['id']" style="display: none;"/>
+                                        <div t-att-class='"bk_plan_div " + (!(bk_av_qty > 0) ? "bk_disable" : "")' t-att-data-plan_price="d_plan['price']">
+                                            <div class="d-none d-sm-block">
+                                                <div class="plan_name" style="font-size: 20px;">
+                                                    <t t-esc="d_plan['name']"/>
+                                                </div>
+                                                <div style="font-size: 18px;font-weight: 700;">
+                                                    <span class="plan_price"  t-att-plan-id="d_plan['plan_id']"  t-esc="d_plan['price']" style="white-space: nowrap;" />
+                                                </div>
+                                                <t t-if="bk_av_qty > 0">
+                                                    <div  class="bk_plan_avl">
+                                                  Available
+                                              </div>
+                                                </t>
+                                                <t t-else="">
+                                                    <div class="bk_plan_sold">
+                                                Sold Out
+                                              </div>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </t>
+                        </t>
+                    </div>
+                    <div class="booking-summary">
+                        <div style="display:inline-block;width:100%">
+                            <div class="col-12 bk_model_cart" style="margin-top: 6px;display:block;float:right;width:100%;">
+                                <div class="row" style="margin-bottom: 7px;display: block;">
+                                    <div class="col-md-6 col-12 bk_total_price_div" style="width:30%;float:left;">
+                                        <span>Qty: </span>
+                                        <!-- <span class="bk_total_price" style="white-space: nowrap;" /> -->
+                                        <select name="qty" class="book-qty">
+                                            <option value="1">1</option>
+                                            <t t-if="max_bk_qty.length > 1">
+                                                <t t-foreach="max_bk_qty" t-as="qty">
+                                                    <option t-att-value="qty">
+                                                        <t t-esc="qty"/>
+                                                    </option>
+                                                </t>
+                                            </t>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 col-12 bk_total_price_div" style="width:50%;float:right;">
+                                        <span>Total: </span>
+                                        <span class="bk_total_price" style="white-space: nowrap;" />
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div style="font-size:20px;font-weight:bold;display:block;float:left;width:100%;margin-top:10px;">
+                                <div style="color:#1CBC8C;font-size:32px;">Booking Summary:</div>
+                            </div> -->
+                        </div>
+                        <!-- <br/>
+                        <div style="float:left;width:100%;" class="booking_summary"/> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="RescheduleBookingTimeSlot">
+        <div class="found_appointes">
+            <div style="display:inline-block;width:100%;">
+                <div class="row bk_border bk_modal_slots">
+                    <t t-foreach="day_slots" t-as="d_slot">
+                        <div class="timeslot" t-att-data-time_slot_id="d_slot['slot']['id']" t-att-data-start_time="d_slot['slot']['start_time']" t-att-data-end_time="d_slot['slot']['end_time']" t-att-data-slot_plans="d_slot['plans']">
+                            <t t-esc="d_slot['slot']['name']"/>
+                        </div>
+                    </t>
+                    <div t-if="!day_slots" class="col-12 text-center no_day_slots">
+                        <span>No slots availble on the selected date, please choose a different date.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="ProductItem" t-inherit="point_of_sale.ProductItem" t-inherit-mode="extension" owl="1">
+        <xpath expr="//span[hasclass('price-tag')]" position="replace">
+            <!-- <div class="product-name" t-attf-id="article_product_{{props.product.id}}">
+            <div style="width:100%;display:inline-block">
+                <div style="float:left;display:block;width:105px;">
+                    <t t-esc="props.product.display_name" />
+                </div>
+            </div>
+            </div> -->
+            <t t-if="props.product.is_booking_type">
+                <span class="price-tag"  style="background:#875A7B;">
+                    <span >Book Now</span>
+                </span>
+            </t>
+            <t t-else="">
+                <span class="price-tag">
+                    <t t-esc="price" />
+                </span>
+            </t>
+        </xpath>
+    </t>
+    <t t-name="ExtendBookingPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-alert" style="width:600px;min-height:200px;">
+                <p class="title">Extend Booking</p>
+                <div class="body">
+                    <t t-if="props.day_slots and props.day_slots.length" >
+                        <div class="bookings">
+                            <div style="display:inline-block;width:100%;">
+                                <div class="row bk_model_plans" style="margin: 0 15px;">
+                                    <t t-if="props.day_slots">
+                                        <div class="row bk_border bk_modal_slots">
+                                            <t t-foreach="props.day_slots" t-as="d_slot">
+                                                <div class="timeslot" t-att-data-time_slot_id="d_slot['slot']['id']" t-att-data-start_time="d_slot['slot']['start_time']" t-att-data-end_time="d_slot['slot']['end_time']" t-att-data-slot_plans="d_slot['plans']">
+                                                    <t t-esc="d_slot['slot']['name']"/>
+                                                </div>
+                                            </t>
+                                            <div t-if="!props.day_slots" class="col-12 text-center no_day_slots">
+                                                <span>No slots availble on the selected date, please choose a different date.</span>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="wk-error-text">
+                        No Slots Are Available for extending the booking!!
+                    </div>
+                    </t>
+                    <div class="wk-error-text"></div>
+                </div>
+                <div class="footer">
+                    <div class="button confirm-extend" t-on-click="click_confirm_extend">
+                        Extend Booking
+                    </div>
+                    <div class="button cancel" t-on-click="cancel">
+                        Cancel
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="OrderCreateNotifyPopupWidget" owl="1">
+        <div class="modal-dialog">
+            <div class="popup popup-textinput" style="border-radius:5px; height:220px" >
+                <div class="order_status" style="height:80px;width:80px;margin-top:15px;margin-left:0">
+                    <div class="show_tick draw"></div>
+                </div>
+                <h3 id="quote_status" style="color:#5cb85c;height:12px;">
+                    <t t-esc="props.title || 'Request Created !!!!!'"/>
+                </h3>
+                <p style="font-size:16px;">
+                    <t t-esc="props.body"/>
+                </p>
+            </div>
+        </div>
+    </t>
+    <t t-name="BlankSlots">
+        <div class="row col-12 bk_plans_m_div" style="display:flex;width:100%;flex-wrap: wrap;">
+      </div>
+    </t>
+    <t t-name="SlotPlans">
+        <div class="row col-12 bk_plans_m_div" style="display:flex;width:100%;flex-wrap: wrap;">
+            <t t-foreach="d_plans" t-as="d_plan">
+                <t t-set="bk_av_qty" t-value="d_plan.avl_qty"/>
+                <t t-if="widget.pos.get_order().get_client()">
+                    <div t-att-class='"plan_available col-md-4 col-12 " + (!(bk_av_qty > 0) ? "bk_disable" : "")' t-att-slot="d_plan['slot']" style="padding: 5px 11px;flex:1" >
+                        <div class="max_qty_available" style="display:none;">
+                            <t t-esc="bk_av_qty"/>
+                        </div>
+                        <label style="display: block;margin-bottom: 0;">
+                            <input type="radio" name="bk_plan" required="true" t-att-id="d_plan['id']" t-att-value="d_plan['id']" style="display: none;"/>
+                            <div t-att-class='"bk_plan_div " + (!(bk_av_qty > 0) ? "bk_disable" : "")' t-att-data-plan_price="d_plan['price']">
+                                <div class="d-none d-sm-block">
+                                    <div class="plan_name" style="font-size: 20px;">
+                                        <t t-esc="d_plan['name']"/>
+                                    </div>
+                                    <div style="font-size: 18px;font-weight: 700;">
+                                        <span class="plan_price" t-att-plan-id="d_plan['plan_id']"  t-esc="d_plan['price']" style="white-space: nowrap;" />
+                                    </div>
+                                    <t t-if="bk_av_qty > 0">
+                                        <div  class="bk_plan_avl">
+                                      Available
+                                  </div>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="bk_plan_sold">
+                                    Sold Out
+                                  </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+    <!-- <t t-name="Confirmbooking">
+        <div class="confirm_booking">
+            <div style="display:inline-block;width:100%;line-height:8px;">
+            <p style="font-size:26px;font-weight:bold;margin-top:10px;margin-bottom:0px">booking Details</p><br/>
+            <p style="font-size:22px;font-weight:bold;margin-top:18px;margin-bottom:11px;"><t t-esc="appointee.name"/></p><br/>
+            We acknowledge the booking request with <t t-esc="appointee.name"/>
+            <p style="font-size:20px;font-weight:bold"><t t-esc="slot_data.display_name"/></p>
+            <p style="font-weight:16px">Name: <t t-esc="customer.name"/></p>
+            <p style="font-weight:16px">Available Contact Number: <t t-esc="customer.phone"/></p>
+            <p style="font-size:20px;font-weight:bold">booking Charges: <t t-esc="charge_amount"/></p>
+            <input type="textarea" style="height:71px;" id="appoint_desc"/>
+            </div>
+        </div>
+    </t> -->
+    <!-- <t t-extend="ActionpadWidget">
+        <t t-jquery=".actionpad" t-operation="before">
+            <div class="control-buttons">
+                <span class="control-button" id="show_bookings" >
+                    Show All bookings
+                </span>
+                <span class="control-button" id="book_booking" >
+                    Book An booking
+                </span>
+            </div>
+        </t>
+    </t>
+ -->
+    <!-- <t t-name="bookingScreenWidget">
+        <div class="clientlist-screen screen">
+            <div class="orders-screen-content">
+                <section class="top-content">
+                    <span class='button back'>
+                        <i class='fa fa-angle-double-left'></i>
+                        Back
+
+
+                    </span>
+                </section>
+                <span class="searchbox">
+                    <input placeholder="Search booking" class="booking_search"/>
+                    <span class="search-clear"></span>
+                </span>
+                <section class="full-content">
+                    <div class='window'>
+                        <section class='subwindow collapsed'>
+                            <div class='subwindow-container collapsed'>
+                                <div class='subwindow-container-fix order-details-contents'></div>
+                            </div>
+                        </section>
+                        <section class='subwindow'>
+                            <div class='wk_table_back subwindow-container'>
+                                <div class='subwindow-container-fix touch-scrollable scrollable-y' style="background-color: rgb(240, 238, 238);overflow-y: scroll;">
+                                    <table class='client-list wk_order_list'>
+                                        <thead>
+                                            <tr style="background-color: rgb(135, 160, 166);color: white;">
+                                                <th>booking No.</th>
+                                                <th>Customer</th>
+                                                <th>Booking</th>
+                                                <th>booking Group</th>
+                                                <th>booking Date</th>
+                                                <th>Slot</th>
+                                                <th>Status</th>
+                                                <th>Payment</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class='wk-booking-list-contents'></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
+ -->
+    <!-- <t t-name="WkbookingLine">
+        <tr class='wk-order-line' t-att-data-id='booking.id' style="cursor:pointer;">
+            <td>
+                <t t-esc='booking.name' />
+            </td>
+            <td>
+                <t t-esc="booking.customer[1] || '-'" />
+            </td>
+            <td>
+                <t t-esc='booking.appoint_person_id[1]' />
+            </td>
+            <td>
+                <t t-esc='booking.appoint_group_id[1]' />
+            </td>
+            <td>
+                <t t-esc='booking.new_formatted_date' />
+            </td>
+            <td>
+                <t t-esc='booking.time_slot[1]' />
+            </td>
+            <td>
+                <t t-if="booking.state == 'new' and !booking.is_paid_via_pos">
+                        New
+                </t>
+                <t t-if="booking.state == 'pending' and !booking.is_paid_via_pos">
+                        Pending
+                </t>
+                <t t-if="booking.is_paid_via_pos and booking.state != 'rejected' and booking.state != 'done' and booking.state != 'approved'">
+                        Paid
+                </t>
+                <t t-if="booking.state == 'rejected'">
+                        Rejected
+                </t>
+                <t t-if="booking.state == 'approved' and !booking.is_paid_via_pos">
+                        Approved
+                </t>
+                <t t-if="booking.state == 'approved' and booking.is_paid_via_pos">
+                        Approved &amp; Paid
+                </t>
+                <t t-if="booking.state == 'done' and !booking.is_paid_via_pos">
+                        Done
+                </t>
+            </td>
+            <td class="button-box">
+                <t t-if="booking.state != 'rejected'">
+                    <t t-if="!booking.is_paid_via_pos">
+                        <t t-if="booking.state == 'new' or booking.state == 'pending'or booking.state == 'approved'">
+                            <button id="pay" t-att-appointee-group-id="booking.appoint_group_id[0]" t-att-time-slot="booking.time_slot[0]" t-att-appointee-id="booking.appoint_person_id[0]" t-att-booking-id="booking.id">Pay</button>
+                        </t>
+                    </t>
+                    <t t-if="booking.state != 'approved'">
+                        <button  id="approve" t-att-appointee-group-id="booking.appoint_group_id[0]" t-att-time-slot="booking.time_slot[0]" t-att-appointee-id="booking.appoint_person_id[0]" t-att-booking-id="booking.id">Approve</button>
+                    </t>
+                    <t t-if="!booking.is_paid_via_pos">
+                        <button  id="cancel" t-att-appointee-group-id="booking.appoint_group_id[0]" t-att-time-slot="booking.time_slot[0]" t-att-appointee-id="booking.appoint_person_id[0]" t-att-booking-id="booking.id">Cancel</button>
+                    </t>
+                    <t t-if="booking.is_paid_via_pos and booking.state == 'approved'">
+                        <button id="done" t-att-appointee-group-id="booking.appoint_group_id[0]" t-att-time-slot="booking.time_slot[0]" t-att-appointee-id="booking.appoint_person_id[0]" t-att-booking-id="booking.id">Done</button>
+                    </t>
+                </t>
+                <t t-else="">
+                    <button id="delete" t-att-appointee-group-id="booking.appoint_group_id[0]" t-att-time-slot="booking.time_slot[0]" t-att-appointee-id="booking.appoint_person_id[0]" t-att-booking-id="booking.id">Delete</button>
+                </t>
+            </td>
+        </tr>
+    </t> -->
+
+    <t t-name="ShowSlotsButtonWidget" owl="1">
+        <div class="slot-button" t-on-click="onClick">
+            <i class="fa fa-id-card" style="margin-right:5px;" aria-hidden="true"></i>
+            <div>Bookings</div>
+        </div>
+    </t>
+
+    <!-- <t t-name="ShowSlotsButtonWidget" owl="1">
+        <div class='control-button'>
+            Show Slots
+        </div>
+    </t> -->
+    <t t-name="ShowBookingsButtonWidget" owl="1">
+        <span class="control-button" id="show_bookings" >
+            Show All Bookings
+        </span>
+    </t>
+    <t t-name="ExtendBooking" owl="1">
+        <div class='control-button' id="extend_booking">
+            Extend Booking
+        </div>
+    </t>
+    <t t-name="BookingOrderScreenWidget" owl="1">
+        <div class="clientlist-screen screen booking">
+            <div class="orders-screen-content">
+                <section class="top-content">
+                    <span class='button back'>
+                        <i class='fa fa-angle-double-left'></i>
+                        Back
+                    </span>
+                </section>
+                <span class="searchbox">
+                    <input placeholder="Search booking" class="booking_search"/>
+                    <span class="search-clear"></span>
+                </span>
+                <span class="sort searchbox" style="font-size:20px;font-weight:bold;left:75%;margin-top:20px;">
+                    <span>Sort : </span>
+                    <select  class="booking_sort" style="font-size:20px;">
+                        <option value="booking_date">Booking Date</option>
+                        <option value="booking_no">Booking No.</option>
+                        <option value="booking_slot">Slot</option>
+                    </select>
+                </span>
+                <!-- <span class="status searchbox" style="font-size:20px;font-weight:bold;left:75%;margin-top:20px;">
+                    <span>Status : </span>
+                    <select  class="booking_status" style="font-size:20px;">
+                        <option value="draft">New</option>
+                        <option value="cancel">Cancel.</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="done">Done</option>
+                    </select>
+                </span> -->
+                <section class="full-content">
+                    <div class='window'>
+                        <section class='subwindow collapsed'>
+                            <div class='subwindow-container collapsed'>
+                                <div class='subwindow-container-fix order-details-contents'></div>
+                            </div>
+                        </section>
+                        <section class='subwindow'>
+                            <div class='wk_table_back subwindow-container'>
+                                <div class='subwindow-container-fix touch-scrollable scrollable-y' style="background-color: rgb(240, 238, 238);overflow-y: scroll;">
+                                    <table class='client-list wk_order_list'>
+                                        <thead>
+                                            <tr style="background-color: rgb(135, 160, 166);color: white;">
+                                                <th>Booking No.</th>
+                                                <th>Customer</th>
+                                                <th>Booking Date</th>
+                                                <th>Slot</th>
+                                                <th>Plan</th>
+                                                <th>Product</th>
+                                                <th>Quantity</th>
+                                                <th>Source</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class='wk-booking-list-contents'></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
+    <!-- <t t-extend="ActionpadWidget">
+        <t t-jquery=".control-buttons" t-operation="append"> -->
+    <!-- <div class=""> -->
+    <!-- <span class="control-button" id="show_bookings" >
+                    Show All Bookings
+                </span> -->
+    <!-- <span class="control-button" id="all_slots" >
+                    All Slots
+                </span> -->
+    <!-- </div> -->
+    <!-- </t>
+    </t> -->
+    <t t-name="WkBookingOrderLine">
+        <tr class='wk-booking-line' t-att-data-id='booking.id' style="cursor:pointer;">
+            <td>
+                <t t-esc='booking.name' />
+            </td>
+            <td>
+                <t t-esc="booking.customer[1] || '-'" />
+            </td>
+            <td>
+                <t t-esc='booking.booking_date' />
+            </td>
+            <td>
+                <t t-esc='booking.time_slot_id[1]' />
+            </td>
+            <td>
+                <t t-esc='booking.plan_id[1]' />
+            </td>
+            <td>
+                <t t-esc='booking.booking_product_id[1]' />
+            </td>
+            <td>
+                <t t-esc='booking.quantity' />
+            </td>
+            <td>
+                <t t-if="booking.booking_source == 'pos'">
+                        Point Of Sale
+                </t>
+                <t t-else="">
+                    Website
+                </t>
+            </td>
+            <td>
+                <t t-if="booking.state == 'draft'">
+                        New
+                </t>
+                <!-- <t t-if="booking.state == 'checkin'">
+                        Checked In
+                </t>   -->
+                <t t-if="booking.state == 'done'">
+                        Done
+                </t>
+                <t t-if="booking.state == 'in_progress'">
+                        In Progress
+                </t>
+                <t t-if="booking.state == 'paid'">
+                        Paid
+                </t>
+                <t t-if="booking.state == 'cancel'">
+                        Cancel
+                </t>
+            </td>
+            <td>
+                <!-- <t t-if="booking.state == 'draft'"> -->
+                <!-- <t t-if="!booking.is_paid_via_pos"> -->
+                <t t-if="booking.state == 'draft'">
+                    <button id="process_start" t-att-booking-id="booking.id">Start</button>
+                    <button id="reschedule_booking" t-att-booking-id="booking.id">Reschedule Booking</button>
+                    <!-- <t t-if="booking.state == 'draft'"> -->
+                    <button id="cancel" t-att-booking-id="booking.id">Cancel</button>
+                </t>
+                <!-- </t> -->
+                <!-- </t> -->
+                <!-- </t>
+                <t t-else="">
+                    <div style="color:red">
+                        Delete
+                    </div>
+                </t> -->
+            </td>
+        </tr>
+    </t>
+    <t t-name="OrderSummary" t-inherit="point_of_sale.OrderSummary" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('summary')]" position='inside'>
+            <div class="timer_hide" style="display:none;">
+                <div id='item_count_value' style='float:left;margin-left:12px;font-weight:bold; max-width: 216px; color: #5B7641;background: rgba(110,200,155,0.17);padding: 10px;'>
+                    <t t-if="env.pos.get_order() and env.pos.get_order().booking_id">
+                        <div>
+                            Timer:&#160;<span class="timer"><t t-esc="env.pos.get_order().remaining_time"/></span>
+                        </div>
+                        <div class="booking_paid" style="margin-top:13px;">
+                            PAID BOOKING
+                        </div>
+                    </t>
+                </div>
+            </div>
+            <!-- <br/>
+            <div class="searchbox booking_paid" style="width:100%;font-size:19px;font-weight:bold;color:black;margin-top:13px;">
+                PAID BOOKING
+            </div> -->
+        </xpath>
+    </t>
+    <t t-extend="Chrome" owl="1" t-inherit="point_of_sale.Chrome" t-inherit-mode="extension" >
+        <xpath expr="//div[hasclass('pos-branding')]//img" position='after'>
+            <ShowSlotsButtonWidget/>
+        </xpath>
+    </t>
+    <t t-extend="PaymentScreenWidget">
+        <t t-jquery=".button.next" t-operation="before">
+            <span class='button done_booking'>
+                <i class='fa fa-angle-double-left'></i>
+                Done Booking
+            </span>
+        </t>
+    </t>
+    <t t-extend="Orderline">
+        <t t-jquery="ul.info-list" t-operation="after">
+            <span t-attf-class="paid_line #{line.product.id}" style="text-align:center;position: relative;bottom: 17px;font-weight: bold;float: right;background:orange;width:55px;border-radius:15px;color:white;">
+                PAID
+            </span>
+            <t t-if="line.is_paid_line">
+                <span t-attf-class="#{line.product.id}" style="text-align:center;position: relative;bottom: 17px;font-weight: bold;float: right;background:orange;width:55px;border-radius:15px;color:white;">
+                    PAID
+                </span>
+            </t>
+        </t>
+        <t t-jquery="ul.info-list" t-operation="append">
+            <t t-if="line.product.is_booking_type">
+                <li>
+                    <div class="info timer" style="font-size:20px;font-weight:bold;color:black;margin-top:5px;">
+                        <div class="timer_hide" style="display:none;">
+                            <t t-if="widget.pos.get_order() and widget.pos.get_order().booking_id">
+                                <t t-esc="widget.pos.get_order().remaining_time"/>
+                              </t>
+                        </div>
+                    </div>
+                </li>
+            </t>
+        </t>
+    </t>
+    <t t-extend="Product">
+        <t t-jquery=".product-img" t-operation="replace">
+            <div class="product-img">
+                <img t-att-src='image_url' />
+                <t t-if="!product.to_weight">
+                    <span class="price-tag">
+                        <t t-if="product.is_booking_type">
+                            <t t-esc="product.range_price"/>
+                            <t t-if="product.range_price != 'No Slots' and product.range_price != 'No Day Slots'">
+                                <t t-esc="widget.pos.currency.symbol"/>
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <t t-esc="widget.format_currency(product.get_price(pricelist, 1),'Product Price')"/>
+                        </t>
+                    </span>
+                </t>
+                <t t-if="product.to_weight">
+                    <span class="price-tag">
+                        <t t-if="product.is_booking_type">
+                            <t t-esc="product.range_price"/>
+                            <t t-if="product.range_price != 'No Slots' and product.range_price != 'No Day Slots'">
+                                <t t-esc="widget.pos.currency.symbol"/>
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <t t-esc="widget.format_currency(product.get_price(pricelist, 1),'Product Price')+'/'+widget.pos.units_by_id[product.uom_id[0]].name"/>
+                        </t>
+                    </span>
+                </t>
+            </div>
+        </t>
+    </t>
+</templates>

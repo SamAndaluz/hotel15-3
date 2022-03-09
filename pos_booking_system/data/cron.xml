@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+
+<odoo>
+	<!-- <data noupdate="1"> -->
+		<record id="ir_cron_paylater_time_limmit_check" model="ir.cron">
+			<field name="name">Paylater Time Limit Check Scheduler</field>
+			<field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">5</field>
+            <field name="interval_type">minutes</field>
+			<field name="numbercall">-1</field>
+			<field ref="model_sale_order" name="model_id"/>
+            <field name="state">code</field>
+            <field name="code">model.paylater_expiry_check_scheduler()</field>
+		</record>
+		<record id="ir_cron_booking_order_check" model="ir.cron">
+			<field name="name">Booking Order Check Scheduler</field>
+			<field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">5</field>
+            <field name="interval_type">minutes</field>
+			<field name="numbercall">-1</field>
+			<field ref="model_booking_order" name="model_id"/>
+            <field name="state">code</field>
+            <field name="code">model.booking_expiry_check_scheduler()</field>
+		</record>
+    <!-- </data> -->
+</odoo>

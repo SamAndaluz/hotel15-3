@@ -1,0 +1,33 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+,,,,,,,
+,,,,,,,
+access_model_booking_order_manager,booking.order,model_booking_order,point_of_sale.group_pos_manager,1,1,1,1
+access_model_booking_order_user, booking.order ,model_booking_order,point_of_sale.group_pos_user,1,1,1,0
+,,,,,,,
+,,,,,,,
+access_model_week_day_manager,booking.order,model_week_day,point_of_sale.group_pos_manager,1,1,1,1
+access_model_week_day_user, booking.order ,model_week_day,point_of_sale.group_pos_user,1,1,1,0
+,,,,,,,
+access_model_web_booking_order_manager,booking.order,model_booking_order,,1,1,1,1
+,,,,,,,
+access_model_booking_order_line_manager,booking.order.line,model_booking_order_line,point_of_sale.group_pos_manager,1,1,1,1
+access_model_booking_order_line_user, booking.order.line ,model_booking_order_line,point_of_sale.group_pos_user,1,1,1,0
+,,,,,,,
+,,,,,,,
+access_model_booking_config_manager,booking.config,model_booking_config,point_of_sale.group_pos_manager,1,1,1,1
+access_model_booking_config_user, booking.config ,model_booking_config,point_of_sale.group_pos_user,1,1,1,0
+,,,,,,,
+,,,,,,,
+access_model_booking_closing_day_manager,booking.closing.day,model_booking_closing_day,point_of_sale.group_pos_manager,1,1,1,1
+access_model_booking_closing_day_user, booking.closing.day ,model_booking_closing_day,point_of_sale.group_pos_user,1,1,1,0
+,,,,,,,
+,,,,,,,
+access_model_company_facility_superuser,company.facility,model_company_facility,pos_booking_system.group_pos_booking_system_super_user,1,1,1,1
+,,,,,,,
+,,,,,,,
+access_model_auto_day_slot_wizard_manager,auto.day.slot.wizard,model_auto_day_slot_wizard,point_of_sale.group_pos_manager,1,1,1,1
+access_model_auto_day_slot_wizard_user, auto.day.slot.wizard ,model_auto_day_slot_wizard,point_of_sale.group_pos_user,1,1,1,0
+,,,,,,,
+,,,,,,,
+access_model_auto_time_slot_wizard_manager,auto.time.slot.wizard,model_auto_time_slot_wizard,point_of_sale.group_pos_manager,1,1,1,1
+access_model_auto_time_slot_wizard_user, auto.time.slot.wizard ,model_auto_time_slot_wizard,point_of_sale.group_pos_user,1,1,1,0
