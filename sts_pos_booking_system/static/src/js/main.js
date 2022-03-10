@@ -976,7 +976,6 @@
                 const product = event.detail;
                 console.log("rppodouct",product)
                 if (product.is_booking_type) {
-                    console.log("self.env.pos.get_order().get_client()",self.env.pos.get_order().get_client())
                     if (self.env.pos.get_order() && self.env.pos.get_order().get_client())
                         if (self.env.pos.db.booking_config)
                             rpc.query({
