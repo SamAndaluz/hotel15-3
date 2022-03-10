@@ -1159,12 +1159,14 @@
             is_booking_order: function () {
                 var self = this;
                 var is_booking_order = false;
-                _.each(self.env.pos.get_order().get_orderlines(), function (line) {
-                    if (line.product.is_booking_type) {
-                        is_booking_order = true;
-                        return true;
-                    }
-                });
+                if (self.env.pos.get_order()){
+                    _.each(self.env.pos.get_order().get_orderlines(), function (line) {
+                        if (line.product.is_booking_type) {
+                            is_booking_order = true;
+                            return true;
+                        }
+                    });
+                }
                 return is_booking_order;
             },
 

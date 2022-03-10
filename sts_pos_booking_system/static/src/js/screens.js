@@ -586,7 +586,6 @@ odoo.define('sts_pos_booking_system.screens', function (require) {
             useListener('click', this.onClick);
         }
         async onClick() {
-            console.log("working slotssssss")
             var self = this;
             if (self.env.pos.is_booking_order()) {
                 var lines = self.env.pos.get_order().export_as_JSON().lines;
