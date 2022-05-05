@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('cashier')]" position="after">
+            <div style="text-align:center;">
+                <div t-if="receipt.order_type_id">
+                    Order Type : <t t-esc="receipt.order_type_id"/>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

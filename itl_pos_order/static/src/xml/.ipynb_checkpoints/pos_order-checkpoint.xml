@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="CheckoutButton" owl="1">
+        <div class="control-button">
+            <i class="fa fa-shopping-cart" role="img" aria-label="Check-Out" title="Check-Out" />
+            Check Out
+        </div>
+    </t>
+
+</templates>
