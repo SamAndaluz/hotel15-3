@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="pos_config_view_form_pos_sale" model="ir.ui.view"> 
+            <field name="name">pos.config.form.pos.sale</field>
+            <field name="model">pos.config</field>
+            <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+            <field name="arch" type="xml">
+                <div id="category_reference" position="after">
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name='allow_timer_product' />
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="allow_timer_product"/>
+                            <div>
+                               Show Seconds in timer <field name="show_seconds"/> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </field>
+        </record>
+        <record id="view_product_form" model="ir.ui.view">
+            <field name="name">product.template.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='options']" position="inside">
+                    <div>
+                        <field name="is_timer_product"/>
+                        <label for="is_timer_product"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_pos_pos_form" model="ir.ui.view">
+            <field name="name">pos.order.form</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_pos_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='lines']/tree/field[@name='full_product_name']" position="after">
+                    <field name="total_time"/>
+                </xpath>
+                <xpath expr="//field[@name='lines']/form/group/field[@name='full_product_name']" position="after">
+                    <field name="total_time"/>
+                    <field name="start_time"/>
+                    <field name="stop_time"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

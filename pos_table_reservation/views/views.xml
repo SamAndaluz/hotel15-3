@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+    	<record id="pos_config_view_form_pos_sale" model="ir.ui.view"> 
+          <field name="name">pos.config.form.pos.sale</field>
+          <field name="model">pos.config</field>
+          <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+          <field name="arch" type="xml">
+              <div id="category_reference" position="after">
+                  <div class="col-xs-12 col-md-6 o_setting_box">
+                      <div class="o_setting_left_pane">
+                          <field name="allow_table_reservation"/>
+                      </div>
+                      <div class="o_setting_right_pane">
+                          <label for="allow_table_reservation"/><br/>
+                          <label for="reserve_table_color"/>
+                          <field name="reserve_table_color"/>
+                      </div>
+                  </div>
+              </div>
+          </field>
+      	</record>
+        <record id="view_restaurant_floor_form_inherit" model="ir.ui.view">
+            <field name="name">Restaurant Floors</field>
+            <field name="model">restaurant.floor</field>
+            <field name="inherit_id" ref="pos_restaurant.view_restaurant_floor_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='shape']" position="after">
+                    <field name="is_reserved"/>
+                    <field name="reserve_note"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,62 @@
+<odoo>
+
+    <record id="pos_order_form_custom_inherit" model="ir.ui.view">
+        <field name="name">pos.order.form.inherit</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="order_type_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="pos_config_custom_inherit_view_form" model="ir.ui.view">
+        <field name="name">pos.config.form.view.inherited</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//h2[1]" position="before">
+                <h2>Order Types</h2>
+                <div class="row mt16 o_settings_container" id="company">
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="select_order_type"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="select_order_type"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+
+                            <div class="content-group mt16" attrs="{'invisible':[('select_order_type','=',False)]}">
+                                <field name="order_type_ids" widget="many2many_tags"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ob_order_type_tree_view" model="ir.ui.view">
+        <field name="name">ob.order.type.tree.view</field>
+        <field name="model">ob.order.type</field>
+        <field name="arch" type="xml">
+            <tree string="Order Type" editable="bottom" create="true">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_order_type_tree" model="ir.actions.act_window">
+        <field name="name">Order Type</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ob.order.type</field>
+        <field name="view_id" ref="ob_order_type_tree_view"/>
+        <field name="view_mode">tree</field>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem id="menu_order_type" name="Order Types" action="action_order_type_tree"
+              parent="point_of_sale.menu_point_config_product"/>
+</odoo>

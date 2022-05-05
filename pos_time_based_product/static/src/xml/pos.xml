@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension" owl="1">
+        <xpath expr="//ul[hasclass('info-list')]" position="after">
+            <!-- <t t-if="env.pos.config.allow_fast_remove_line"> -->
+                <span class="line_timer" t-att-data-id="props.line.id" t-on-click="stop_start_order_line" style="font-size: 20px;">
+                    <t t-if="props.line.play_button">
+                        <span class="fa fa-pause-circle-o"/>
+                    </t>
+                    <t t-if="! props.line.play_button">
+                        <span class="fa fa-play-circle-o"/>
+                    </t>
+                </span> 
+                <span class="hour"><t t-esc="props.line.hours"/></span>:<span class="minutes"><t t-esc="props.line.minutes"/></span>
+                <t t-if='env.pos.config.show_seconds'>:<span class="second"><t t-esc="props.line.seconds"/></span></t>
+            <!-- </t> -->
+        </xpath>
+    </t>   
+</templates>

@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<data>
+
+  <record id="itl_view_restaurant_floor_form" model="ir.ui.view">
+    <field name="name">itl_view_restaurant_floor_form</field>
+    <field name="model">restaurant.floor</field>
+    <field name="inherit_id" ref="pos_restaurant.view_restaurant_floor_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//form[1]/sheet[1]/field[@name='table_ids']/tree[1]/field[@name='seats']" position="after">
+         <field name="room_id"/>
+      </xpath>
+    </field>
+   </record>
+
+   <record id="itl_view_restaurant_table_form" model="ir.ui.view">
+    <field name="name">itl_view_restaurant_table_form</field>
+    <field name="model">restaurant.table</field>
+    <field name="inherit_id" ref="pos_restaurant.view_restaurant_table_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='seats']" position="after">
+         <field name="room_id"/>
+      </xpath>
+    </field>
+   </record>
+
+   <record id="itl_hotel_activity_form" model="ir.ui.view">
+    <field name="name">itl_hotel_activity_form</field>
+    <field name="model">hotel.activity</field>
+    <field name="inherit_id" ref="hotel_housekeeping.view_h_activity_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='categ_id']" position="after">
+        <field name="activity_duration" placeholder="Minutes"/>
+        <field name="is_default_for_clean_type"/>
+      </xpath>
+    </field>
+   </record>
+
+   <!-- Housekeeping -->
+   <record id="itl_view_hotel_housekeeping_form" model="ir.ui.view">
+    <field name="name">itl_view_hotel_housekeeping_form</field>
+    <field name="model">hotel.housekeeping</field>
+    <field name="inherit_id" ref="hotel_housekeeping.view_hotel_housekeeping_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='inspector_id']" position="attributes">
+        <attribute name="required">0</attribute>
+      </xpath>
+    </field>
+   </record>
+    
+</data>
